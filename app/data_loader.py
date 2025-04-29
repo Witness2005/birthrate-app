@@ -11,8 +11,12 @@ async def fetch_csv():
         async with session.get(CSV_URL) as resp:
             if resp.status == 200:
                 content = await resp.read()
-                df = pd.read_csv(io.BytesIO(content))
-                DATAFRAME = df
-                print(f"Datos cargados correctamente, tamaño del DataFrame: {len(DATAFRAME)}")  # Imprime el tamaño de los datos cargados
+                print(f"Contenido descargado, tamaño: {len(content)} bytes")  # Imprime el tamaño del contenido descargado
+                try:
+                    df = pd.read_csv(io.BytesIO(content))
+                    DATAFRAME = df
+                    print(f"Datos cargados correctamente, tamaño del DataFrame: {len(DATAFRAME)}")  # Imprime el tamaño del DataFrame
+                except Exception as e:
+                    print(f"Error al procesar los datos CSV: {e}")
             else:
                 print(f"Error al descargar datos: {resp.status}")
