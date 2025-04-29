@@ -15,11 +15,14 @@ async def startup_event():
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
-    df = DATAFRAME.head(100)  # Mostrar solo los primeros 100 registros
-    table_html = df.to_html(classes="table table-striped table-bordered table-hover", 
-                          index=False, 
-                          border=0,
-                          justify="center")
+    if DATAFRAME.empty:
+        table_html = "<p>No hay datos disponibles.</p>"
+    else:
+        df = DATAFRAME.head(100)  # Mostrar solo los primeros 100 registros
+        table_html = df.to_html(classes="table table-striped table-bordered table-hover", 
+                                index=False, 
+                                border=0,
+                                justify="center")
     
     return templates.TemplateResponse("index.html", {
         "request": request,

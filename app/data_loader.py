@@ -13,6 +13,6 @@ async def fetch_csv():
                 content = await resp.read()
                 df = pd.read_csv(io.BytesIO(content))
                 DATAFRAME = df
-                print("Datos cargados correctamente.")
+                print(f"Datos cargados correctamente, tamaño del DataFrame: {len(DATAFRAME)}")  # Imprime el tamaño de los datos cargados
             else:
                 print(f"Error al descargar datos: {resp.status}")
