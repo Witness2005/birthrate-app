@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 import asyncio
+from datetime import datetime
 
 from app.data_loader import fetch_csv, DATAFRAME
 
@@ -15,8 +16,17 @@ async def startup_event():
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     df = DATAFRAME.head(100)  # Mostrar solo los primeros 100 registros
-    table_html = df.to_html(classes="table table-striped", index=False)
-    return templates.TemplateResponse("index.html", {"request": request, "table": table_html})
+    table_html = df.to_html(classes="table table-striped table-bordered table-hover", 
+                          index=False, 
+                          border=0,
+                          justify="center")
+    
+    return templates.TemplateResponse("index.html", {
+        "request": request,
+        "table": table_html,
+        "dataframe_size": len(DATAFRAME),
+        "current_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    })
 
 @app.get("/refresh")
 async def refresh_data():
